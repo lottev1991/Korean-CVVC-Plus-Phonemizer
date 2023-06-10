@@ -8,7 +8,7 @@ This phonemizer was heavily built upon NANA's Korean CVC Phonemizer, which comes
 If you haven't downloaded OpenUtau yet, you can do so [here](https://github.com/stakira/openutau).
 ## How to install
 ### Method #1
-- Click on Tags above in order to get the .dll file.
+- Click on Tags above or on the right in order to get the .dll file.
 - Once downloaded, drag and drop ``KoreanCVVCPlusPhonemizer.dll`` onto the OpenUtau program.
 ### Method #2
 - As above, click on Tags.
