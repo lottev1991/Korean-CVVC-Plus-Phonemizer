@@ -8,9 +8,11 @@ This phonemizer was heavily built upon NANA's Korean CVC Phonemizer, which comes
 If you haven't downloaded OpenUtau yet, you can do so [here](https://github.com/stakira/openutau).
 ## How to install
 ### Method #1
-Drag and drop ``KoreanCVVCPlusPhonemizer.dll`` onto the OpenUtau program.
+- Click on Tags above in order to get the .dll file.
+- Once downloaded, drag and drop ``KoreanCVVCPlusPhonemizer.dll`` onto the OpenUtau program.
 ### Method #2
-Move ``KoreanCVVCPlusPhonemizer.dll`` into the ``path\to\OpenUtau\Plugins`` folder.
+- As above, click on Tags.
+- When downloaded, move ``KoreanCVVCPlusPhonemizer.dll`` into the ``path\to\OpenUtau\Plugins`` folder.
 ### What is "Korean CVVC+"?
 It's a name for my own method of Korean in UTAU. It's heavily based upon Syeon's Korean CVVC list, which is unfortunately no longer online. I've adjusted it to be a bit more expansive. I will release the reclist and an accompanying voicebank sometime in the future.
 #### How syllables work
