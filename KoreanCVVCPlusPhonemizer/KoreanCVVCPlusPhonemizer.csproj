@@ -37,9 +37,6 @@
     <Reference Include="OpenUtau.Plugin.Builtin">
       <HintPath>..\..\..\..\OpenUtau-master\OpenUtau\OpenUtau.Test\bin\Debug\net6.0-windows\OpenUtau.Plugin.Builtin.dll</HintPath>
     </Reference>
-    <Reference Include="Serilog">
-      <HintPath>..\..\..\OpenUtau-master\OpenUtau\OpenUtau.Test\bin\Debug\net6.0-windows\Serilog.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
