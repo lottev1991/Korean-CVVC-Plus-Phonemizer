@@ -54,7 +54,7 @@ Nalgaeset has many options, including a popular setting for romaja-based QWERTY 
 
 A more detailed explanation of how it works is explained on the download page linked above. I recommend that you give it a read before using it.
 
-This software is of course also of course very handy for using OpenUtau's in-built Korean phonemizers.
+This software is of course also very handy for using OpenUtau's in-built Korean phonemizers.
 ### Got any issues?
 Feel free to leave those on the Issues tab! I'll make sure to take a look.
 
