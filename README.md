@@ -35,7 +35,7 @@ Syllables are built like this:
   - the vowel ㅣ(i),
   - the vowel ㅗ(o) or ㅜ(u),
 
-  the VC will treat the consonant as either rounded or palatalized (depending on the vowel), e.g. ``[V Cy]``/``[V Cw]``
+  the VC will treat the consonant as either rounded or palatalized (depending on the vowel), e.g. ``[v cy]``/``[v cw]``
 - The main difference between connecting VC and batchim, is that batchim uses capital letters for the consonants, whereas connecting VC uses lowercase.
 - This phonemizer supports some Konglish sounds (i.e. "Engrish" with a Korean voicebank):
   - "f";
