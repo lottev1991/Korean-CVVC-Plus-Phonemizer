@@ -270,7 +270,7 @@ namespace OpenUtau.Plugin.Builtin {
                 TCLvowel = TCLtemp[1];
                 TCLplainvowel = naPlainVowels[CLvowel];
 
-                if (TCLvowel.StartsWith("y") || (TCLvowel == "i")) { TCLsemivowel = 1; } else if (TCLvowel.StartsWith("w") || (TCLvowel == "o") || (TCLvowel == "u")) { TCLsemivowel = 2; } else {
+                if (TCLvowel.StartsWith("y") || (TCLvowel == "i" && TCLconsonant != "")) { TCLsemivowel = 1; } else if (TCLvowel.StartsWith("w") || ((TCLvowel == "o" && TCLconsonant != "") || (TCLvowel == "u" && TCLconsonant != ""))) { TCLsemivowel = 2; } else {
                     TCLsemivowel = 0;
                 }
 
@@ -333,7 +333,7 @@ namespace OpenUtau.Plugin.Builtin {
                     TNLvowel = TNLtemp[1];
                     TNLplainvowel = naPlainVowels[NLvowel];
 
-                    if (TNLvowel.StartsWith("y") || TNLvowel == "i") { TNLsemivowel = 1; } else if (TNLvowel.StartsWith("w") || TNLvowel == "o" || TNLvowel == "u") { TNLsemivowel = 2; }
+                    if (TNLvowel.StartsWith("y") || TNLvowel == "i" && TNLconsonant != "") { TNLsemivowel = 1; } else if (TNLvowel.StartsWith("w") || TNLvowel == "o" && TNLconsonant != "" || TNLvowel == "u" && TNLconsonant != "") { TNLsemivowel = 2; }
 
                     TNLtemp = naFinals[NLfinal].Split(':');
                     TNLfinal = TNLtemp[1];
