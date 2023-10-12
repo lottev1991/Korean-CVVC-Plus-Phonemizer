@@ -1,4 +1,4 @@
-(This readme is English-only for now, my apologies.)
+**English** | [한국어](README_KR.md)
 
 # Korean CVVC+ Phonemizer
 A custom Korean phonemizer for OpenUtau.
@@ -63,5 +63,5 @@ Please note that I sadly do not know Korean, so I can only respond to issues in 
 Feel free to make a pull request! You can also leave ideas in the Issues tab, although I can't guarantee I'm able to implement everything. Of course, maybe someone else might pick up your idea for their own PR.
 ### Will I ever submit this phonemizer upstream?
 Only if there's enough demand for it. There are already so many in-built Korean phonemizers and I'd rather not make it too excessive. That's why I've decided to make it a separate plugin for now instead.
-### I'd like to translate this readme to Korean!
+### I'd like to properly translate this readme to Korean!
 Yes please! Help with that would be much appreciated.
