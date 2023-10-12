@@ -561,7 +561,7 @@ namespace OpenUtau.Plugin.Builtin {
 
                 // Connector note with ㅇ(NG)
                 if (prevExist && TCLconsonant == "" && TPLfinal == "NG") {
-                    string[] tests = new string[] { $"NG {CV}", CV, currentLyric };
+                    string[] tests = new string[] { $"{TPLplainfinal} {CV}", CV, currentLyric };
                     if (checkOtoUntilHit(tests, note, out var oto)) {
                         CV = oto.Alias;
                     }
@@ -574,7 +574,7 @@ namespace OpenUtau.Plugin.Builtin {
                     var prevLyric = string.Join("", prevUnicode);
 
                     // Current note is VV
-                    if (vowelLookup.TryGetValue(prevUnicode.LastOrDefault() ?? string.Empty, out var vow)) {
+                    if (vowelLookup.TryGetValue(prevUnicode.LastOrDefault().ToString() ?? string.Empty, out var vow)) {
                         vowel = vow;
 
                         var mixVV = $"{vow} {CV}";
@@ -608,7 +608,7 @@ namespace OpenUtau.Plugin.Builtin {
 
                     // Get consonant from next note
                     var consonant = "";
-                    if (consonantLookup.TryGetValue(nextUnicode.FirstOrDefault() ?? string.Empty, out var con)) {
+                    if (consonantLookup.TryGetValue(nextUnicode.FirstOrDefault().ToString() ?? string.Empty, out var con) || (nextLyric.Length >= 2 && consonantLookup.TryGetValue(nextLyric.Substring(0, 2), out con)) || (nextLyric.Length >= 3 && consonantLookup.TryGetValue(nextLyric.Substring(0, 3), out con))) {
                         consonant = getConsonant(nextNeighbour?.lyric); //Mixed romaja
                         if ((!isAlphaCon(consonant) || con == "f" || con == "v" || con == "z" || con == "th" || con == "rr")) {
                             consonant = con;
@@ -632,7 +632,6 @@ namespace OpenUtau.Plugin.Builtin {
                     if (!nextHangeul) {
                         VC = TCLplainvowel + " " + consonant;
                         CC = TCLplainfinal + " " + consonant;
-
                     }
                 }
 
@@ -668,9 +667,9 @@ namespace OpenUtau.Plugin.Builtin {
                             },
                                 };
                             }
-                        } else if (!nextHangeul && singer.TryGetMappedOto(CC, note.tone + attr0.toneShift, attr0.voiceColor, out _)) {
+                        } else if (!nextHangeul && singer.TryGetMappedOto(CC, note.tone + attr0.toneShift, attr0.voiceColor, out _) && nextNeighbour != null) {
                             int totalDuration = notes.Sum(n => n.duration);
-                            int fcLength = totalDuration / 3;
+                            int fcLength = totalDuration / 2;
                             if ((TCLfinal == "K") || (TCLfinal == "P") || (TCLfinal == "T")) { fcLength = totalDuration / 2; }
                             int ccLength = 60;
                             var nextUnicode = ToUnicodeElements(nextNeighbour?.lyric);
@@ -678,7 +677,6 @@ namespace OpenUtau.Plugin.Builtin {
                             if (singer.TryGetMappedOto(nextLyric, nextNeighbour.Value.tone + attr0.toneShift, attr0.voiceColor, out var oto0)) {
                                 if (oto0.Overlap < 0) {
                                     ccLength = MsToTick(oto0.Preutter - oto0.Overlap);
-                                    //ccLength = totalDuration / 2;
                                 } else {
                                     ccLength = MsToTick(oto0.Preutter);
                                 }
@@ -838,7 +836,7 @@ namespace OpenUtau.Plugin.Builtin {
 
                 var prevLyric = string.Join("", prevUnicode);
                 // Current note is VV
-                if (vowelLookup.TryGetValue(prevUnicode.LastOrDefault() ?? string.Empty, out var vow)) {
+                if (vowelLookup.TryGetValue(prevUnicode.LastOrDefault().ToString() ?? string.Empty, out var vow)) {
                     vowel = vow;
 
                     var vowLyric = $"{vow} {currentLyric}";
@@ -919,7 +917,7 @@ namespace OpenUtau.Plugin.Builtin {
 
                 // Get consonant from next note
                 var consonant = "";
-                if (consonantLookup.TryGetValue(nextUnicode.FirstOrDefault() ?? string.Empty, out var con)) {
+                if (consonantLookup.TryGetValue(nextUnicode.FirstOrDefault().ToString() ?? string.Empty, out var con) || (nextLyric.Length >= 2 && consonantLookup.TryGetValue(nextLyric.Substring(0, 2), out con)) || (nextLyric.Length >= 3 && consonantLookup.TryGetValue(nextLyric.Substring(0, 3), out con))) {
                     consonant = getConsonant(nextNeighbour?.lyric); //Romaja only
                     if ((!isAlphaCon(consonant) || con == "f" || con == "v" || con == "z" || con == "th" || con == "rr")) {
                         consonant = con;
