@@ -511,6 +511,9 @@ namespace OpenUtau.Plugin.Builtin {
                     if (nextExist && nextHangeul && (TCLfinal != "")) {
                         if (((PLfinal == 8) && (TNLconsonant == "r") || ((PLfinal == 13) && (TCLconsonant == "r")) || ((PLfinal == 15) && (TCLconsonant == "r")))) { TCLconsonant = "l"; }
                     }
+                    if (nextExist && nextHangeul && (TCLfinal != "")) {
+                        if ((TCLfinal == "N") && (TNLconsonant == "r")) { TCLfinal = "L"; TCLplainfinal = "L"; TNLconsonant = TNLconsonant.Replace("r", "l"); }
+                    }
 
 
                     // 8. Batchim + ㄹ(r) = ㄹㄹ(l)
