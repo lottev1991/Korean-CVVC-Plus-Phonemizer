@@ -148,7 +148,57 @@ namespace OpenUtau.Plugin.Builtin {
             str = consStr.Replace('y', ' ');
             str = str.Trim();
 
-            if (str == "gg") { return true; } else if (str == "dd") { return true; } else if (str == "bb") { return true; } else if (str == "ss") { return true; } else if (str == "f") { return true; } else if (str == "v") { return true; } else if (str == "z") { return true; } else if (str == "th") { return true; } else if (str == "rr") { return true; } else if (str == "g") { return true; } else if (str == "n") { return true; } else if (str == "d") { return true; } else if (str == "r") { return true; } else if (str == "m") { return true; } else if (str == "b") { return true; } else if (str == "s") { return true; } else if (str == "j") { return true; } else if (str == "ch") { return true; } else if (str == "k") { return true; } else if (str == "t") { return true; } else if (str == "p") { return true; } else if (str == "h") { return true; } else if (str == "jj") { return true; } else if (str == "l") { return true; } else { return false; }
+            if (str == "gg") {
+                return true;
+            } else if (str == "dd") {
+                return true;
+            } else if (str == "bb") {
+                return true;
+            } else if (str == "ss") {
+                return true;
+            } else if (str == "jj") {
+                return true;
+            } else if (str == "f") {
+                return true;
+            } else if (str == "v") {
+                return true;
+            } else if (str == "z") {
+                return true;
+            } else if (str == "th") {
+                return true;
+            } else if (str == "rr") {
+                return true;
+            } else if (str == "g") {
+                return true;
+            } else if (str == "n") {
+                return true;
+            } else if (str == "d") {
+                return true;
+            } else if (str == "r") {
+                return true;
+            } else if (str == "m") {
+                return true;
+            } else if (str == "b") {
+                return true;
+            } else if (str == "s") {
+                return true;
+            } else if (str == "j") {
+                return true;
+            } else if (str == "ch") {
+                return true;
+            } else if (str == "k") {
+                return true;
+            } else if (str == "t") {
+                return true;
+            } else if (str == "p") {
+                return true;
+            } else if (str == "h") {
+                return true;
+            } else if (str == "l") {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         static KoreanCVVCPlusPhonemizer() {
@@ -608,18 +658,34 @@ namespace OpenUtau.Plugin.Builtin {
 
                     // Get consonant from next note
                     var consonant = "";
-                    if (consonantLookup.TryGetValue(nextUnicode.FirstOrDefault().ToString() ?? string.Empty, out var con) || (nextLyric.Length >= 2 && consonantLookup.TryGetValue(nextLyric.Substring(0, 2), out con)) || (nextLyric.Length >= 3 && consonantLookup.TryGetValue(nextLyric.Substring(0, 3), out con))) {
+                    if (consonantLookup.TryGetValue(nextUnicode.FirstOrDefault().ToString() ?? string.Empty, out var con) || (nextLyric.Length >= 3 && consonantLookup.TryGetValue(nextLyric.Substring(0, 3), out con))) {
                         consonant = getConsonant(nextNeighbour?.lyric); //Mixed romaja
                         if ((!isAlphaCon(consonant) || con == "f" || con == "v" || con == "z" || con == "th" || con == "rr")) {
                             consonant = con;
-                        } else if (nextLyric.StartsWith(con + "y") || (nextLyric.Contains("i") && !nextLyric.Contains("wi") && !nextLyric.Contains("eui"))) {
-                            consonant = con + "y";
-                        } else if (nextLyric.StartsWith(con + "w") || (nextLyric.Contains("o") && !nextLyric.Contains("eo")) || (nextLyric.Contains("u") && !nextLyric.Contains("eu"))) {
-                            consonant = con + "w";
+                        } else if (nextLyric.StartsWith("ggy") || (nextLyric.Contains("ggi"))) {
+                            consonant = "ggy";
+                        } else if (nextLyric.StartsWith("ggw") || (nextLyric.Contains("ggo")) || (nextLyric.Contains("ggu"))) {
+                            consonant = "ggw";
+                        } else if (nextLyric.StartsWith("ddy") || (nextLyric.Contains("ddi"))) {
+                            consonant = "ddy";
+                        } else if (nextLyric.StartsWith("ddw") || (nextLyric.Contains("ddo")) || (nextLyric.Contains("ddu"))) {
+                            consonant = "ddw";
+                        } else if (nextLyric.StartsWith("bby") || (nextLyric.Contains("bbi"))) {
+                            consonant = "bby";
+                        } else if (nextLyric.StartsWith("bbw") || (nextLyric.Contains("bbo")) || (nextLyric.Contains("bbu"))) {
+                            consonant = "bbw";
                         } else if (nextLyric.StartsWith("ssy") || (nextLyric.Contains("ssi"))) {
                             consonant = "ssy";
                         } else if (nextLyric.StartsWith("ssw") || (nextLyric.Contains("sso")) || (nextLyric.Contains("ssu"))) {
                             consonant = "ssw";
+                        } else if (nextLyric.StartsWith("jjy") || (nextLyric.Contains("jji"))) {
+                            consonant = "jjy";
+                        } else if (nextLyric.StartsWith("jjw") || (nextLyric.Contains("jjo")) || (nextLyric.Contains("jju"))) {
+                            consonant = "jjw";
+                        } else if (nextLyric.StartsWith(con + "y") || (nextLyric.Contains("i") && !nextLyric.Contains("wi") && !nextLyric.Contains("eui"))) {
+                            consonant = con + "y";
+                        } else if (nextLyric.StartsWith(con + "w") || (nextLyric.Contains("o") && !nextLyric.Contains("eo")) || (nextLyric.Contains("u") && !nextLyric.Contains("eu"))) {
+                            consonant = con + "w";
                         }
                     } else if (nextLyric.StartsWith("y")) {
                         consonant = "y";
@@ -917,18 +983,34 @@ namespace OpenUtau.Plugin.Builtin {
 
                 // Get consonant from next note
                 var consonant = "";
-                if (consonantLookup.TryGetValue(nextUnicode.FirstOrDefault().ToString() ?? string.Empty, out var con) || (nextLyric.Length >= 2 && consonantLookup.TryGetValue(nextLyric.Substring(0, 2), out con)) || (nextLyric.Length >= 3 && consonantLookup.TryGetValue(nextLyric.Substring(0, 3), out con))) {
+                if (consonantLookup.TryGetValue(nextUnicode.FirstOrDefault().ToString() ?? string.Empty, out var con) || (nextLyric.Length >= 3 && consonantLookup.TryGetValue(nextLyric.Substring(0, 3), out con))) {
                     consonant = getConsonant(nextNeighbour?.lyric); //Romaja only
                     if ((!isAlphaCon(consonant) || con == "f" || con == "v" || con == "z" || con == "th" || con == "rr")) {
                         consonant = con;
-                    } else if (nextLyric.StartsWith(con + "y") || (nextLyric.Contains("i") && !nextLyric.Contains("eui"))) {
-                        consonant = con + "y";
-                    } else if (nextLyric.StartsWith(con + "w") || (nextLyric.Contains("o") && !nextLyric.Contains("eo")) || (nextLyric.Contains("u") && !nextLyric.Contains("eu"))) {
-                        consonant = con + "w";
+                    } else if (nextLyric.StartsWith("ggy") || (nextLyric.Contains("ggi"))) {
+                        consonant = "ggy";
+                    } else if (nextLyric.StartsWith("ggw") || (nextLyric.Contains("ggo")) || (nextLyric.Contains("ggu"))) {
+                        consonant = "ggw";
+                    } else if (nextLyric.StartsWith("ddy") || (nextLyric.Contains("ddi"))) {
+                        consonant = "ddy";
+                    } else if (nextLyric.StartsWith("ddw") || (nextLyric.Contains("ddo")) || (nextLyric.Contains("ddu"))) {
+                        consonant = "ddw";
+                    } else if (nextLyric.StartsWith("bby") || (nextLyric.Contains("bbi"))) {
+                        consonant = "bby";
+                    } else if (nextLyric.StartsWith("bbw") || (nextLyric.Contains("bbo")) || (nextLyric.Contains("bbu"))) {
+                        consonant = "bbw";
                     } else if (nextLyric.StartsWith("ssy") || (nextLyric.Contains("ssi"))) {
                         consonant = "ssy";
                     } else if (nextLyric.StartsWith("ssw") || (nextLyric.Contains("sso")) || (nextLyric.Contains("ssu"))) {
                         consonant = "ssw";
+                    } else if (nextLyric.StartsWith("jjy") || (nextLyric.Contains("jji"))) {
+                        consonant = "jjy";
+                    } else if (nextLyric.StartsWith("jjw") || (nextLyric.Contains("jjo")) || (nextLyric.Contains("jju"))) {
+                        consonant = "jjw";
+                    } else if (nextLyric.StartsWith(con + "y") || (nextLyric.Contains("i") && !nextLyric.Contains("eui"))) {
+                        consonant = con + "y";
+                    } else if (nextLyric.StartsWith(con + "w") || (nextLyric.Contains("o") && !nextLyric.Contains("eo")) || (nextLyric.Contains("u") && !nextLyric.Contains("eu"))) {
+                        consonant = con + "w";
                     }
                 } else if (nextLyric.StartsWith("y")) {
                     consonant = "y";
