@@ -662,10 +662,6 @@ namespace OpenUtau.Plugin.Builtin {
                         consonant = getConsonant(nextNeighbour?.lyric); //Mixed romaja
                         if ((!isAlphaCon(consonant) || con == "f" || con == "v" || con == "z" || con == "th" || con == "rr")) {
                             consonant = con;
-                        } else if (nextLyric.StartsWith("chy") || (nextLyric.Contains("chi"))) {
-                            consonant = "chy";
-                        } else if (nextLyric.StartsWith("chw") || (nextLyric.Contains("cho")) || (nextLyric.Contains("chu"))) {
-                            consonant = "chw";
                         } else if (nextLyric.StartsWith("ggy") || (nextLyric.Contains("ggi"))) {
                             consonant = "ggy";
                         } else if (nextLyric.StartsWith("ggw") || (nextLyric.Contains("ggo")) || (nextLyric.Contains("ggu"))) {
@@ -695,9 +691,13 @@ namespace OpenUtau.Plugin.Builtin {
                         consonant = "y";
                     } else if (nextLyric.StartsWith("w")) {
                         consonant = "w";
+                    } else if (nextLyric.StartsWith("chy") || (nextLyric.Contains("chi"))) {
+                        consonant = "chy";
+                    } else if (nextLyric.StartsWith("chw") || (nextLyric.Contains("cho")) || (nextLyric.Contains("chu"))) {
+                        consonant = "chw";
                     } else if (nextExist && nextHangeul && TNLconsonant != "") {
                         consonant = TNLconsonant;
-                    } else if (nextLyric.StartsWith("ch")) { consonant = "ch"; }
+                    }
 
                     if (!nextHangeul) {
                         VC = TCLplainvowel + " " + consonant;
@@ -991,8 +991,6 @@ namespace OpenUtau.Plugin.Builtin {
                     consonant = getConsonant(nextNeighbour?.lyric); //Romaja only
                     if ((!isAlphaCon(consonant) || con == "f" || con == "v" || con == "z" || con == "th" || con == "rr")) {
                         consonant = con;
-                    } else if (nextLyric.StartsWith("chy") || (nextLyric.Contains("chi"))) {
-                        consonant = "chy";
                     } else if (nextLyric.StartsWith("chw") || (nextLyric.Contains("cho")) || (nextLyric.Contains("chu"))) {
                         consonant = "chw";
                     } else if (nextLyric.StartsWith("ggy") || (nextLyric.Contains("ggi"))) {
@@ -1020,6 +1018,10 @@ namespace OpenUtau.Plugin.Builtin {
                     } else if (nextLyric.StartsWith(con + "w") || (nextLyric.Contains("o") && !nextLyric.Contains("eo")) || (nextLyric.Contains("u") && !nextLyric.Contains("eu"))) {
                         consonant = con + "w";
                     }
+                } else if (nextLyric.StartsWith("chy") || (nextLyric.Contains("chi"))) {
+                    consonant = "chy";
+                } else if (nextLyric.StartsWith("chw") || (nextLyric.Contains("cho")) || (nextLyric.Contains("chu"))) {
+                    consonant = "chw";
                 } else if (nextLyric.StartsWith("y")) {
                     consonant = "y";
                 } else if (nextLyric.StartsWith("w")) {
@@ -1038,7 +1040,7 @@ namespace OpenUtau.Plugin.Builtin {
                     consonant = "l";
                 } else if (nextExist && nextHangeul && TNLconsonant == "") {
                     consonant = "";
-                } else if (nextLyric.StartsWith("ch")) { consonant = "ch"; }
+                }
 
 
                 if (consonant == "") {
