@@ -713,7 +713,17 @@ namespace OpenUtau.Plugin.Builtin {
                             int fcLength = totalDuration / 2;
                             if ((TCLfinal == "K") || (TCLfinal == "P") || (TCLfinal == "T")) { fcLength = totalDuration / 2; }
 
-                            if (nextExist) { if ((nextNeighbour?.lyric)[0] == 'ㄹ') { CC = $"{TCLplainfinal} {TNLconsonant = "l"}"; } }
+                            if (nextExist) {
+                                if ((nextNeighbour?.lyric)[0] == 'ㄹ') {
+                                    if (TNLsemivowel == 1) {
+                                        CC = $"{TCLplainfinal} {TNLconsonant = "l" + "y"}";
+                                    } else if (TNLsemivowel == 2) {
+                                        CC = $"{TCLplainfinal} {TNLconsonant = "l" + "w"}";
+                                    } else {
+                                        CC = $"{TCLplainfinal} {TNLconsonant = "l"}";
+                                    }
+                                }
+                            }
 
                             int ccLength = 60;
                             if (TNLconsonant == "r") { ccLength = 30; } else if (TNLconsonant == "s") { ccLength = totalDuration / 3; } else if ((TNLconsonant == "k") || (TNLconsonant == "t") || (TNLconsonant == "p") || (TNLconsonant == "ch")) { ccLength = totalDuration / 3; } else if ((TNLconsonant == "gg") || (TNLconsonant == "dd") || (TNLconsonant == "bb") || (TNLconsonant == "ss") || (TNLconsonant == "jj")) { ccLength = totalDuration / 3; }
@@ -801,7 +811,17 @@ namespace OpenUtau.Plugin.Builtin {
                 // if there is no batchim
                 if (TCLfinal == "") {
                     // if there is a next note
-                    if (nextExist) { if ((nextNeighbour?.lyric)[0] == 'ㄹ') { VC = $"{TCLplainvowel} {TNLconsonant = "l"}"; } }
+                    if (nextExist) {
+                        if ((nextNeighbour?.lyric)[0] == 'ㄹ') {
+                            if (TNLsemivowel == 1) {
+                                VC = $"{TCLplainvowel} {TNLconsonant = "l" + "y"}";
+                            } else if (TNLsemivowel == 2) {
+                                VC = $"{TCLplainvowel} {TNLconsonant = "l" + "w"}";
+                            } else {
+                                VC = $"{TCLplainvowel} {TNLconsonant = "l"}";
+                            }
+                        }
+                    }
                     if ((VC != "") && (TNLconsonant != "" || TNLconsonantCVVC != "") && singer.TryGetMappedOto(VC, nextNeighbour.Value.tone + attr0.toneShift, attr0.voiceColor, out var otoVC)) {
                         int totalDuration = notes.Sum(n => n.duration);
                         int vcLength = 60;
