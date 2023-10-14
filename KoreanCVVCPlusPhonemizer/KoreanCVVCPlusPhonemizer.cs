@@ -713,8 +713,7 @@ namespace OpenUtau.Plugin.Builtin {
                     if (CC != "" && singer.TryGetMappedOto(CC, note.tone + attr0.toneShift, attr0.voiceColor, out _)) {
                         if (nextHangeul && (TNLconsonant != "" || TNLconsonantCVVC != "") && CC != "") {
                             int totalDuration = notes.Sum(n => n.duration);
-                            int fcLength = totalDuration / 2;
-                            if ((TCLfinal == "K") || (TCLfinal == "P") || (TCLfinal == "T")) { fcLength = totalDuration / 2; }
+                            int fcLength = totalDuration / 3;
 
                             if (nextExist) {
                                 if ((nextNeighbour?.lyric)[0] == 'ㄹ') {
@@ -729,7 +728,22 @@ namespace OpenUtau.Plugin.Builtin {
                             }
 
                             int ccLength = 60;
-                            if (TNLconsonant == "r") { ccLength = 30; } else if (TNLconsonant == "s") { ccLength = totalDuration / 3; } else if ((TNLconsonant == "k") || (TNLconsonant == "t") || (TNLconsonant == "p") || (TNLconsonant == "ch")) { ccLength = totalDuration / 3; } else if ((TNLconsonant == "gg") || (TNLconsonant == "dd") || (TNLconsonant == "bb") || (TNLconsonant == "ss") || (TNLconsonant == "jj")) { ccLength = totalDuration / 3; }
+
+                            var nextCV = string.Join("", TNLconsonant + TNLvowel);
+
+                            if (singer.TryGetMappedOto(nextCV, nextNeighbour.Value.tone + attr0.toneShift, attr0.voiceColor, out var oto0)) {
+                                if (oto0.Overlap < 0) {
+                                    ccLength = MsToTick(oto0.Preutter - oto0.Overlap);
+                                } else {
+                                    ccLength = MsToTick(oto0.Preutter);
+                                }
+                                fcLength = fcLength + ccLength;
+                            }
+
+                            var nextAttr = nextNeighbour.Value.phonemeAttributes?.FirstOrDefault(attr => attr.index == 0) ?? default;
+                            // Minimam is 30 tick, maximum is half of note
+                            
+                            fcLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(30, fcLength * (nextAttr.consonantStretchRatio ?? 1))));
                             if (singer.TryGetMappedOto(CV, note.tone + attr0.toneShift, attr0.voiceColor, out var oto1) && singer.TryGetMappedOto(FC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto2) && singer.TryGetMappedOto(CC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto3)) {
                                 CV = oto1.Alias;
                                 FC = oto2.Alias;
@@ -752,9 +766,9 @@ namespace OpenUtau.Plugin.Builtin {
                             }
                         } else if (!nextHangeul && singer.TryGetMappedOto(CC, note.tone + attr0.toneShift, attr0.voiceColor, out _) && nextNeighbour != null) {
                             int totalDuration = notes.Sum(n => n.duration);
-                            int fcLength = totalDuration / 2;
-                            if ((TCLfinal == "K") || (TCLfinal == "P") || (TCLfinal == "T")) { fcLength = totalDuration / 2; }
+                            int fcLength = totalDuration / 3;
                             int ccLength = 60;
+                            
                             var nextUnicode = ToUnicodeElements(nextNeighbour?.lyric);
                             var nextLyric = string.Join("", nextUnicode);
                             if (singer.TryGetMappedOto(nextLyric, nextNeighbour.Value.tone + attr0.toneShift, attr0.voiceColor, out var oto0)) {
@@ -763,7 +777,12 @@ namespace OpenUtau.Plugin.Builtin {
                                 } else {
                                     ccLength = MsToTick(oto0.Preutter);
                                 }
+                                fcLength = fcLength + ccLength;
                             }
+
+                            var nextAttr = nextNeighbour.Value.phonemeAttributes?.FirstOrDefault(attr => attr.index == 0) ?? default;
+                            // Minimam is 30 tick, maximum is half of note
+                            fcLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(30, fcLength * (nextAttr.consonantStretchRatio ?? 1))));
 
                             if (singer.TryGetMappedOto(CV, note.tone + attr0.toneShift, attr0.voiceColor, out var oto1) && singer.TryGetMappedOto(FC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto2) && singer.TryGetMappedOto(CC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto3)) {
                                 CV = oto1.Alias;
@@ -829,7 +848,19 @@ namespace OpenUtau.Plugin.Builtin {
                         int totalDuration = notes.Sum(n => n.duration);
                         int vcLength = 60;
 
-                        if (TNLconsonant == "r") { vcLength = 30; } else if (TNLconsonant == "s") { vcLength = totalDuration / 3; } else if ((TNLconsonant == "k") || (TNLconsonant == "t") || (TNLconsonant == "p") || (TNLconsonant == "ch")) { vcLength = totalDuration / 2; } else if ((TNLconsonant == "gg") || (TNLconsonant == "dd") || (TNLconsonant == "bb") || (TNLconsonant == "ss") || (TNLconsonant == "jj")) { vcLength = totalDuration / 2; }
+                        var nextCV = string.Join("", TNLconsonant + TNLvowel);
+
+                        if (singer.TryGetMappedOto(nextCV, nextNeighbour.Value.tone + attr0.toneShift, attr0.voiceColor, out var oto0)) {
+                            if (oto0.Overlap < 0) {
+                                vcLength = MsToTick(oto0.Preutter - oto0.Overlap);
+                            } else {
+                                vcLength = MsToTick(oto0.Preutter);
+                            }
+                        }
+
+                        var nextAttr = nextNeighbour.Value.phonemeAttributes?.FirstOrDefault(attr => attr.index == 0) ?? default;
+                        // Minimam is 30 tick, maximum is half of note
+                        vcLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(30, vcLength * (nextAttr.consonantStretchRatio ?? 1))));
 
                         if (singer.TryGetMappedOto(CV, note.tone + attr0.toneShift, attr0.voiceColor, out var oto1) && singer.TryGetMappedOto(VC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto2)) {
                             CV = oto1.Alias;
@@ -858,6 +889,10 @@ namespace OpenUtau.Plugin.Builtin {
                                 vcLength = MsToTick(oto0.Preutter);
                             }
                         }
+
+                        var nextAttr = nextNeighbour.Value.phonemeAttributes?.FirstOrDefault(attr => attr.index == 0) ?? default;
+                        // Minimam is 30 tick, maximum is half of note
+                        vcLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(30, vcLength * (nextAttr.consonantStretchRatio ?? 1))));
 
                         if (singer.TryGetMappedOto(CV, note.tone + attr0.toneShift, attr0.voiceColor, out var oto1) && singer.TryGetMappedOto(VC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto2)) {
                             CV = oto1.Alias;
@@ -1059,7 +1094,7 @@ namespace OpenUtau.Plugin.Builtin {
                     consonant = TNLconsonant + "y";
                 } else if (nextExist && nextHangeul && TNLconsonant != "" && TNLsemivowel == 2) {
                     consonant = TNLconsonant + "w";
-                } else if (nextExist && nextHangeul && nextLyric.StartsWith("ㄹ")) {
+                } else if (nextExist && nextHangeul && nextLyric.StartsWith("ㄹ") && TNLconsonant == "r") {
                     consonant = "l";
                 } else if (nextExist && nextHangeul && TNLconsonant == "") {
                     consonant = "";
@@ -1099,6 +1134,7 @@ namespace OpenUtau.Plugin.Builtin {
                     };
                 }
 
+                var nextCV = string.Join("", TNLconsonant + TNLvowel);
                 int totalDuration = notes.Sum(n => n.duration);
                 int vcLength = 60;
                 var nextAttr = nextNeighbour.Value.phonemeAttributes?.FirstOrDefault(attr => attr.index == 0) ?? default;
@@ -1109,7 +1145,15 @@ namespace OpenUtau.Plugin.Builtin {
                     } else {
                         vcLength = MsToTick(oto.Preutter);
                     }
-                } else if (TNLconsonant == "r") { vcLength = 30; } else if (TNLconsonant == "s") { vcLength = totalDuration / 3; } else if ((TNLconsonant == "k") || (TNLconsonant == "t") || (TNLconsonant == "p") || (TNLconsonant == "ch")) { vcLength = totalDuration / 2; } else if ((TNLconsonant == "gg") || (TNLconsonant == "dd") || (TNLconsonant == "bb") || (TNLconsonant == "ss") || (TNLconsonant == "jj")) { vcLength = totalDuration / 2; }
+                } else if (nextExist && nextHangeul && TNLconsonant != "" && singer.TryGetMappedOto(nextCV, nextNeighbour.Value.tone + attr0.toneShift, attr0.voiceColor, out var oto0)) {
+                    if (oto0.Overlap < 0) {
+                        vcLength = MsToTick(oto0.Preutter - oto0.Overlap);
+                    } else {
+                        vcLength = MsToTick(oto0.Preutter);
+                    }
+                }
+                // Minimam is 30 tick, maximum is half of note
+                vcLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(30, vcLength * (nextAttr.consonantStretchRatio ?? 1))));
 
                 return new Result {
                     phonemes = new Phoneme[] {
