@@ -741,9 +741,8 @@ namespace OpenUtau.Plugin.Builtin {
                             }
 
                             var nextAttr = nextNeighbour.Value.phonemeAttributes?.FirstOrDefault(attr => attr.index == 0) ?? default;
-                            // Minimam is 30 tick, maximum is half of note
-                            
-                            ccLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(30, ccLength * (nextAttr.consonantStretchRatio ?? 1))));
+                            // Minimum is 5 tick, maximum is half of note
+                            ccLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(5, ccLength * (nextAttr.consonantStretchRatio ?? 1))));
 
                             if (singer.TryGetMappedOto(CV, note.tone + attr0.toneShift, attr0.voiceColor, out var oto1) && singer.TryGetMappedOto(FC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto2) && singer.TryGetMappedOto(CC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto3)) {
                                 CV = oto1.Alias;
@@ -782,8 +781,8 @@ namespace OpenUtau.Plugin.Builtin {
                             }
 
                             var nextAttr = nextNeighbour.Value.phonemeAttributes?.FirstOrDefault(attr => attr.index == 0) ?? default;
-                            // Minimam is 30 tick, maximum is half of note
-                            ccLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(30, ccLength * (nextAttr.consonantStretchRatio ?? 1))));
+                            // Minimum is 5 tick, maximum is half of note
+                            ccLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(5, ccLength * (nextAttr.consonantStretchRatio ?? 1))));
 
                             if (singer.TryGetMappedOto(CV, note.tone + attr0.toneShift, attr0.voiceColor, out var oto1) && singer.TryGetMappedOto(FC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto2) && singer.TryGetMappedOto(CC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto3)) {
                                 CV = oto1.Alias;
@@ -861,7 +860,7 @@ namespace OpenUtau.Plugin.Builtin {
 
                         var nextAttr = nextNeighbour.Value.phonemeAttributes?.FirstOrDefault(attr => attr.index == 0) ?? default;
                         // Minimam is 30 tick, maximum is half of note
-                        vcLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(30, vcLength * (nextAttr.consonantStretchRatio ?? 1))));
+                        vcLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(5, vcLength * (nextAttr.consonantStretchRatio ?? 1))));
 
                         if (singer.TryGetMappedOto(CV, note.tone + attr0.toneShift, attr0.voiceColor, out var oto1) && singer.TryGetMappedOto(VC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto2)) {
                             CV = oto1.Alias;
@@ -892,8 +891,8 @@ namespace OpenUtau.Plugin.Builtin {
                         }
 
                         var nextAttr = nextNeighbour.Value.phonemeAttributes?.FirstOrDefault(attr => attr.index == 0) ?? default;
-                        // Minimam is 30 tick, maximum is half of note
-                        vcLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(30, vcLength * (nextAttr.consonantStretchRatio ?? 1))));
+                        // Minimum is 5 tick, maximum is half of note
+                        vcLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(5, vcLength * (nextAttr.consonantStretchRatio ?? 1))));
 
                         if (singer.TryGetMappedOto(CV, note.tone + attr0.toneShift, attr0.voiceColor, out var oto1) && singer.TryGetMappedOto(VC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto2)) {
                             CV = oto1.Alias;
@@ -1153,8 +1152,8 @@ namespace OpenUtau.Plugin.Builtin {
                         vcLength = MsToTick(oto0.Preutter);
                     }
                 }
-                // Minimam is 30 tick, maximum is half of note
-                vcLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(30, vcLength * (nextAttr.consonantStretchRatio ?? 1))));
+                // Minimum is 5 tick, maximum is half of note
+                vcLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(5, vcLength * (nextAttr.consonantStretchRatio ?? 1))));
 
                 return new Result {
                     phonemes = new Phoneme[] {
