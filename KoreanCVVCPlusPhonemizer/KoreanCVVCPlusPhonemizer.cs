@@ -711,7 +711,7 @@ namespace OpenUtau.Plugin.Builtin {
                 // if there is a batchim with CC
                 if (FC != "") {
                     if (CC != "" && singer.TryGetMappedOto(CC, note.tone + attr0.toneShift, attr0.voiceColor, out _)) {
-                        if (nextHangeul && (TNLconsonant != "" || TNLconsonantCVVC != "") && CC != "") {
+                        if (nextHangeul && (TNLconsonant != "" || TNLconsonantCVVC != "" || (TNLconsonant == "" || TNLconsonantCVVC != "") && (TNLsemivowel == 1 || TNLsemivowel == 2)) && CC != "") {
                             int totalDuration = notes.Sum(n => n.duration);
                             int fcLength = totalDuration / 3;
 
@@ -844,7 +844,7 @@ namespace OpenUtau.Plugin.Builtin {
                             }
                         }
                     }
-                    if ((VC != "") && (TNLconsonant != "" || TNLconsonantCVVC != "") && singer.TryGetMappedOto(VC, nextNeighbour.Value.tone + attr0.toneShift, attr0.voiceColor, out var otoVC)) {
+                    if ((VC != "") && nextHangeul && (TNLconsonant != "" || TNLconsonantCVVC != "" || (TNLconsonant == "" || TNLconsonantCVVC != "") && (TNLsemivowel == 1 || TNLsemivowel == 2)) && singer.TryGetMappedOto(VC, nextNeighbour.Value.tone + attr0.toneShift, attr0.voiceColor, out var otoVC)) {
                         int totalDuration = notes.Sum(n => n.duration);
                         int vcLength = 60;
 
