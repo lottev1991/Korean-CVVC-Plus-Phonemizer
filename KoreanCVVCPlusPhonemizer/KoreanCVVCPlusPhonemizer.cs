@@ -494,10 +494,11 @@ namespace OpenUtau.Plugin.Builtin {
 
                         if ((TCLfinal == "M") && (TNLconsonant == "r")) { TNLconsonant = "n"; }
 
-                        if ((TCLfinal == "T") && (TNLconsonant == "s")) { TCLfinal = ""; TNLconsonant = "ss"; }
+                        if ((TCLfinal == "T") && (TNLconsonant == "s" || TNLconsonant == "ss")) { TCLfinal = ""; TNLconsonant = "ss"; }
 
                         if ((TCLfinal == "NG") && (TNLconsonant == "r")) { TNLconsonant = "n"; }
 
+                        if ((TCLfinal == "L") && (TNLconsonant == "d")) { TNLconsonant = "dd"; }
 
                         // Hanja batchim base ㄱ(g)ㄷ(d)ㅂ(b) + ㄹ(l) = ㅇ(ng)ㄴ(n)ㅁ(m) + ㄴ(n)(2)
                         if ((TCLfinal == "K") && (NLconsonant == 5)) { TCLfinal = "NG"; TCLplainfinal = "NG"; } else if ((TCLfinal == "T") && (NLconsonant == 5)) { TCLfinal = "N"; TCLplainfinal = "N"; } else if ((TCLfinal == "P") && (NLconsonant == 5)) { TCLfinal = "M"; TCLplainfinal = "M"; }
@@ -737,12 +738,20 @@ namespace OpenUtau.Plugin.Builtin {
                                 } else {
                                     ccLength = MsToTick(oto0.Preutter);
                                 }
-                                fcLength = fcLength + ccLength;
                             }
 
                             var nextAttr = nextNeighbour.Value.phonemeAttributes?.FirstOrDefault(attr => attr.index == 0) ?? default;
+                            if ((TCLfinal == "K" || TCLfinal == "T" || TCLfinal == "P") && singer.TryGetMappedOto(CC, nextNeighbour.Value.tone + attr0.toneShift, attr0.voiceColor, out var oto4)) {
+                                if (oto4.Overlap < 0) {
+                                    fcLength = MsToTick(oto4.Preutter - oto4.Overlap);
+                                } else {
+                                    fcLength = MsToTick(oto4.Preutter);
+                                }
+                            }
+                            
                             // Minimum is 5 tick, maximum is half of note
                             ccLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(5, ccLength * (nextAttr.consonantStretchRatio ?? 1))));
+                            fcLength = Convert.ToInt32(Math.Min(totalDuration / 1.5, Math.Max(5, fcLength + (ccLength * (nextAttr.consonantStretchRatio ?? 1)))));
 
                             if (singer.TryGetMappedOto(CV, note.tone + attr0.toneShift, attr0.voiceColor, out var oto1) && singer.TryGetMappedOto(FC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto2) && singer.TryGetMappedOto(CC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto3)) {
                                 CV = oto1.Alias;
@@ -777,11 +786,19 @@ namespace OpenUtau.Plugin.Builtin {
                                 } else {
                                     ccLength = MsToTick(oto0.Preutter);
                                 }
-                                fcLength = fcLength + ccLength;
                             }
 
                             var nextAttr = nextNeighbour.Value.phonemeAttributes?.FirstOrDefault(attr => attr.index == 0) ?? default;
+                            if ((TCLfinal == "K" || TCLfinal == "T" || TCLfinal == "P") && singer.TryGetMappedOto(CC, nextNeighbour.Value.tone + attr0.toneShift, attr0.voiceColor, out var oto4)) {
+                                if (oto4.Overlap < 0) {
+                                    fcLength = MsToTick(oto4.Preutter - oto4.Overlap);
+                                } else {
+                                    fcLength = MsToTick(oto4.Preutter);
+                                }
+                            }
+
                             // Minimum is 5 tick, maximum is half of note
+                            fcLength = Convert.ToInt32(Math.Min(totalDuration / 1.5, Math.Max(5, fcLength + (ccLength * (nextAttr.consonantStretchRatio ?? 1)))));
                             ccLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(5, ccLength * (nextAttr.consonantStretchRatio ?? 1))));
 
                             if (singer.TryGetMappedOto(CV, note.tone + attr0.toneShift, attr0.voiceColor, out var oto1) && singer.TryGetMappedOto(FC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto2) && singer.TryGetMappedOto(CC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto3)) {
