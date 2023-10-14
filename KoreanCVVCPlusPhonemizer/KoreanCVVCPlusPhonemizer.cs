@@ -1145,7 +1145,7 @@ namespace OpenUtau.Plugin.Builtin {
                     } else {
                         vcLength = MsToTick(oto.Preutter);
                     }
-                } else if (nextExist && nextHangeul && TNLconsonant != "" && singer.TryGetMappedOto(nextCV, nextNeighbour.Value.tone + attr0.toneShift, attr0.voiceColor, out var oto0)) {
+                } else if (nextExist && nextHangeul && (TNLconsonant != "" || TNLconsonantCVVC != "" || (TNLconsonant == "" || TNLconsonantCVVC != "") && (TNLsemivowel == 1 || TNLsemivowel == 2)) && singer.TryGetMappedOto(nextCV, nextNeighbour.Value.tone + attr0.toneShift, attr0.voiceColor, out var oto0)) {
                     if (oto0.Overlap < 0) {
                         vcLength = MsToTick(oto0.Preutter - oto0.Overlap);
                     } else {
