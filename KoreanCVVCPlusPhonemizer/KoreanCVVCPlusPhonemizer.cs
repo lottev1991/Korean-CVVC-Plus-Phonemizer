@@ -1119,6 +1119,9 @@ namespace OpenUtau.Plugin.Builtin {
                 if (currentLyric.Contains("K")) {
                     vcPhoneme = $"K {consonant}";
                 }
+                if (currentLyric.Contains("er")) {
+                    vcPhoneme = $"er {consonant}";
+                }
                 var vcPhonemes = new string[] { vcPhoneme, "" };
                 if (checkOtoUntilHit(vcPhonemes, note, out var oto1)) {
                     vcPhoneme = oto1.Alias;
