@@ -57,6 +57,7 @@ namespace OpenUtau.Plugin.Builtin {
             "T=T",
             "K=K",
             "er=er",
+            "・=・"
         };
 
         static readonly string[] consonants = new string[] {
@@ -299,13 +300,16 @@ namespace OpenUtau.Plugin.Builtin {
             char firstCL, firstPL, firstNL;
             int lCL, lPL, lNL;
             int uCL, uPL, uNL;
+            int konglishCL, konglishPL, konglishNL;
             lCL = 0; lPL = 0; lNL = 0;
+            konglishCL = 0; konglishPL = 0; konglishNL = 0;
             bool prevIsBreath = false;
 
 
             // Check the first letter of the current note
             firstCL = currentLyric[0];
             if (firstCL == 'ㄹ') { lCL = 1; firstCL = currentLyric[1]; }
+            if (firstCL == '1') { konglishCL = 1; firstCL = currentLyric[1]; }
             uCL = (int) firstCL;
             if ((uCL >= hangeulStartIndex) && (uCL <= hangeulEndIndex)) {
                 currentHangeul = true;
@@ -339,6 +343,7 @@ namespace OpenUtau.Plugin.Builtin {
                 firstPL = (prevNeighbour?.lyric)[0]; // get lyrics
                 prevExist = true; // if previous note exists
                 if (firstPL == 'ㄹ') { lPL = 1; firstPL = (prevNeighbour?.lyric)[1]; } // if note contains ㄹㄹ ("l")
+                if (firstPL == '1') { konglishPL = 1; firstPL = (prevNeighbour?.lyric)[1]; }
                 uPL = (int) firstPL; // convert lyrics to int
 
                 if ((uPL >= hangeulStartIndex) && (uPL <= hangeulEndIndex)) {
@@ -367,6 +372,7 @@ namespace OpenUtau.Plugin.Builtin {
                 firstNL = (nextNeighbour?.lyric)[0];
                 nextExist = true;
                 if (firstNL == 'ㄹ') { lNL = 1; firstNL = (nextNeighbour?.lyric)[1]; }
+                if (firstNL == '1') { konglishNL = 1; TNLsemivowel = 0; firstNL = (nextNeighbour?.lyric)[1]; }
                 uNL = (int) firstNL;
 
                 if ((uNL >= hangeulStartIndex) && (uNL <= hangeulEndIndex)) {
@@ -420,12 +426,12 @@ namespace OpenUtau.Plugin.Builtin {
 
                     // 2. aspirated / organic sound / become harsh (sandhi)
                     if (prevExist && prevHangeul && (TPLfinal != "")) {
-                        if (((PLfinal == 27) && (CLconsonant == 0)) || ((PLfinal == 6) && (CLconsonant == 0)) || ((PLfinal == 15) && (CLconsonant == 0))) { TCLconsonant = "k"; } else if (((PLfinal == 27) && (CLconsonant == 3)) || ((PLfinal == 6) && (CLconsonant == 3)) || ((PLfinal == 15) && (CLconsonant == 3))) { TCLconsonant = "t"; } else if (((PLfinal == 27) && (CLconsonant == 12)) || ((PLfinal == 6) && (CLconsonant == 12)) || ((PLfinal == 15) && (CLconsonant == 12))) { TCLconsonant = "ch"; } else if (((PLfinal == 27) && (CLconsonant == 9)) || ((PLfinal == 6) && (CLconsonant == 9)) || ((PLfinal == 15) && (CLconsonant == 9))) { TCLconsonant = "ss"; }
+                        if (((PLfinal == 27) && (CLconsonant == 0)) || ((PLfinal == 6) && (CLconsonant == 0)) || ((PLfinal == 15) && (CLconsonant == 0))) { TCLconsonant = "k"; } else if (((PLfinal == 27) && (CLconsonant == 3)) || ((PLfinal == 6) && (CLconsonant == 3)) || ((PLfinal == 15) && (CLconsonant == 3))) { TCLconsonant = "t"; } else if (((PLfinal == 27) && (CLconsonant == 12)) || ((PLfinal == 6) && (CLconsonant == 12)) || ((PLfinal == 15) && (CLconsonant == 12))) { TCLconsonant = "ch"; } else if ((((PLfinal == 27) && (CLconsonant == 9)) || ((PLfinal == 6) && (CLconsonant == 9)) || ((PLfinal == 15) && (CLconsonant == 9))) && konglishCL == 0) { TCLconsonant = "ss"; }
 
-                        if ((PLfinal == 1) && (CLconsonant == 18)) { TCLconsonant = "k"; } else if ((PLfinal == 7) && (CLconsonant == 18)) { TCLconsonant = "t"; } else if ((PLfinal == 17) && (CLconsonant == 18)) { TCLconsonant = "p"; } else if ((PLfinal == 22) && (CLconsonant == 18)) { TCLconsonant = "ch"; }
+                        if ((PLfinal == 1) && (CLconsonant == 18)) { TCLconsonant = "k"; } else if ((PLfinal == 7) && (CLconsonant == 18)) { TCLconsonant = "t"; } else if ((PLfinal == 17) && (CLconsonant == 18) && konglishCL == 0) { TCLconsonant = "p"; } else if ((PLfinal == 22) && (CLconsonant == 18)) { TCLconsonant = "ch"; }
                     }
                     if (nextExist && nextHangeul && (TCLfinal != "")) {
-                        if ((NLconsonant == 0) && (CLfinal == 27)) { TCLfinal = ""; TCLplainfinal = ""; TNLconsonant = "k"; } else if ((NLconsonant == 0) && (CLfinal == 6)) { TCLfinal = "N"; TCLplainfinal = "N"; TNLconsonant = "k"; } else if ((NLconsonant == 0) && (CLfinal == 15)) { TCLfinal = "L"; TCLplainfinal = "L"; TNLconsonant = "K"; } else if ((NLconsonant == 3) && (CLfinal == 27)) { TCLfinal = ""; TCLplainfinal = ""; TNLconsonant = "t"; } else if ((NLconsonant == 3) && (CLfinal == 6)) { TCLfinal = "N"; TCLplainfinal = "N"; TNLconsonant = "t"; } else if ((NLconsonant == 3) && (CLfinal == 15)) { TCLfinal = "L"; TCLplainfinal = "L"; TNLconsonant = "t"; } else if ((NLconsonant == 12) && (CLfinal == 27)) { TCLfinal = ""; TCLplainfinal = ""; TNLconsonant = "ch"; } else if ((NLconsonant == 12) && (CLfinal == 6)) { TCLfinal = "N"; TCLplainfinal = "N"; TNLconsonant = "ch"; } else if ((NLconsonant == 12) && (CLfinal == 15)) { TCLfinal = "L"; TCLplainfinal = "L"; TNLconsonant = "ch"; } else if ((NLconsonant == 9) && (CLfinal == 27)) { TCLfinal = ""; TCLplainfinal = ""; TNLconsonant = "ss"; } else if ((NLconsonant == 9) && (CLfinal == 6)) { TCLfinal = "N"; TCLplainfinal = "N"; TNLconsonant = "ss"; } else if ((NLconsonant == 9) && (CLfinal == 15)) { TCLfinal = "L"; TCLplainfinal = "L"; TNLconsonant = "ss"; }
+                        if ((NLconsonant == 0) && (CLfinal == 27)) { TCLfinal = ""; TCLplainfinal = ""; TNLconsonant = "k"; } else if ((NLconsonant == 0) && (CLfinal == 6)) { TCLfinal = "N"; TCLplainfinal = "N"; TNLconsonant = "k"; } else if ((NLconsonant == 0) && (CLfinal == 15)) { TCLfinal = "L"; TCLplainfinal = "L"; TNLconsonant = "k"; } else if ((NLconsonant == 3) && (CLfinal == 27)) { TCLfinal = ""; TCLplainfinal = ""; TNLconsonant = "t"; } else if ((NLconsonant == 3) && (CLfinal == 6)) { TCLfinal = "N"; TCLplainfinal = "N"; TNLconsonant = "t"; } else if ((NLconsonant == 3) && (CLfinal == 15)) { TCLfinal = "L"; TCLplainfinal = "L"; TNLconsonant = "t"; } else if ((NLconsonant == 12) && (CLfinal == 27)) { TCLfinal = ""; TCLplainfinal = ""; TNLconsonant = "ch"; } else if ((NLconsonant == 12) && (CLfinal == 6)) { TCLfinal = "N"; TCLplainfinal = "N"; TNLconsonant = "ch"; } else if ((NLconsonant == 12) && (CLfinal == 15)) { TCLfinal = "L"; TCLplainfinal = "L"; TNLconsonant = "ch"; } else if ((NLconsonant == 9) && (CLfinal == 27)) { TCLfinal = ""; TCLplainfinal = ""; TNLconsonant = "ss"; } else if ((NLconsonant == 9) && (CLfinal == 6)) { TCLfinal = "N"; TCLplainfinal = "N"; TNLconsonant = "ss"; } else if ((NLconsonant == 9) && (CLfinal == 15)) { TCLfinal = "L"; TCLplainfinal = "L"; TNLconsonant = "ss"; }
 
                         if ((NLconsonant == 2) && (CLfinal == 27)) { TCLfinal = "N"; TCLplainfinal = "N"; }
 
@@ -447,7 +453,17 @@ namespace OpenUtau.Plugin.Builtin {
                     // 4. Become hard/voiced
                     if (prevExist && prevHangeul && TPLfinal != "") {
                         // ㄱ(g)ㄷ(d)ㅂ(b) + ㄱ(g)ㄷ(d)ㅂ(b)ㅅ(s)ㅈ(j) = ㄲ(gg)ㄸ(dd)ㅃ(bb)ㅆ(ss)ㅉ(jj)
-                        if (((TPLfinal == "K") && (CLconsonant == 0)) || ((TPLfinal == "T") && (CLconsonant == 0)) || ((TPLfinal == "P") && (CLconsonant == 0))) { TCLconsonant = "gg"; } else if (((TPLfinal == "K") && (CLconsonant == 3)) || ((TPLfinal == "T") && (CLconsonant == 3)) || ((TPLfinal == "P") && (CLconsonant == 3))) { TCLconsonant = "dd"; } else if (((TPLfinal == "K") && (CLconsonant == 7)) || ((TPLfinal == "T") && (CLconsonant == 7)) || ((TPLfinal == "P") && (CLconsonant == 7))) { TCLconsonant = "bb"; } else if (((TPLfinal == "K") && (CLconsonant == 9)) || ((TPLfinal == "T") && (CLconsonant == 9)) || ((TPLfinal == "P") && (CLconsonant == 9))) { TCLconsonant = "ss"; } else if (((TPLfinal == "K") && (CLconsonant == 12)) || ((TPLfinal == "T") && (CLconsonant == 12)) || ((TPLfinal == "P") && (CLconsonant == 12))) { TCLconsonant = "jj"; }
+                        if (((TPLfinal == "K") && (CLconsonant == 0)) || ((TPLfinal == "T") && (CLconsonant == 0)) || ((TPLfinal == "P") && (CLconsonant == 0))) {
+                            TCLconsonant = "gg";
+                        } else if (((TPLfinal == "K") && (CLconsonant == 3)) || ((TPLfinal == "T") && (CLconsonant == 3)) || ((TPLfinal == "P") && (CLconsonant == 3))) {
+                            TCLconsonant = "dd";
+                        } else if ((((TPLfinal == "K") && (CLconsonant == 7)) || ((TPLfinal == "T") && (CLconsonant == 7)) || ((TPLfinal == "P") && (CLconsonant == 7))) && konglishCL == 0) {
+                            TCLconsonant = "bb";
+                        } else if ((((TPLfinal == "K") && (CLconsonant == 9)) || ((TPLfinal == "T") && (CLconsonant == 9)) || ((TPLfinal == "P") && (CLconsonant == 9))) && konglishCL == 0) {
+                            TCLconsonant = "ss";
+                        } else if ((((TPLfinal == "K") && (CLconsonant == 12)) || ((TPLfinal == "T") && (CLconsonant == 12)) || ((TPLfinal == "P") && (CLconsonant == 12))) && konglishCL == 0) {
+                            TCLconsonant = "jj";
+                        }
 
                         /* 
                         // Word stem support ㄴ(n)ㅁ(m) + ㄱ(g)ㄷ(d)ㅅ(s)ㅈ(j) = ㄲ(gg)ㄸ(dd)ㅆ(ss)ㅉ(jj)
@@ -458,10 +474,10 @@ namespace OpenUtau.Plugin.Builtin {
                         */
 
                         // Articles ending in ㄹ(l) / Hanja ㄹ(l) + ㄷ(d)ㅅ(s)ㅈ(j) = ㄸ(dd)ㅆ(ss)ㅉ(jj)
-                        if ((PLfinal == 8) && (CLconsonant == 3)) { TCLconsonant = "dd"; } else if ((PLfinal == 8) && (CLconsonant == 9)) { TCLconsonant = "ss"; } else if ((PLfinal == 8) && (CLconsonant == 12)) { TCLconsonant = "jj"; }
+                        if ((PLfinal == 8) && (CLconsonant == 3)) { TCLconsonant = "dd"; } else if ((PLfinal == 8) && (CLconsonant == 9) && konglishCL == 0) { TCLconsonant = "ss"; } else if ((PLfinal == 8) && (CLconsonant == 12) && konglishCL == 0) { TCLconsonant = "jj"; }
 
                         // stem support ㄼ(lb)ㄾ(lt) + ㄱ(g)ㄷ(d)ㅅ(s)ㅈ(j) = ㄲ(gg)ㄸ(dd)ㅆ(ss)ㅉ(jj)
-                        if (((PLfinal == 11) && (CLconsonant == 0)) || ((PLfinal == 13) && (CLconsonant == 0))) { TCLconsonant = "gg"; } else if (((PLfinal == 11) && (CLconsonant == 3)) || ((PLfinal == 13) && (CLconsonant == 3))) { TCLconsonant = "dd"; } else if (((PLfinal == 11) && (CLconsonant == 9)) || ((PLfinal == 13) && (CLconsonant == 9))) { TCLconsonant = "ss"; } else if (((PLfinal == 11) && (CLconsonant == 12)) || ((PLfinal == 13) && (CLconsonant == 12))) { TCLconsonant = "jj"; }
+                        if (((PLfinal == 11) && (CLconsonant == 0)) || ((PLfinal == 13) && (CLconsonant == 0))) { TCLconsonant = "gg"; } else if (((PLfinal == 11) && (CLconsonant == 3)) || ((PLfinal == 13) && (CLconsonant == 3))) { TCLconsonant = "dd"; } else if (((PLfinal == 11) && (CLconsonant == 9)) || ((PLfinal == 13) && (CLconsonant == 9))) { TCLconsonant = "ss"; } else if ((((PLfinal == 11) && (CLconsonant == 12)) || ((PLfinal == 13) && (CLconsonant == 12))) && konglishCL == 0) { TCLconsonant = "jj"; }
                     }
 
 
@@ -478,50 +494,118 @@ namespace OpenUtau.Plugin.Builtin {
                     // 6. nasalization
                     if (prevExist && prevHangeul && (TPLfinal != "")) {
                         // Hanja batchim (endings) ㅁ(m)ㅇ(ng) + ㄹ(l) = ㄴ(n)
-                        if (((TPLfinal == "M") && (CLconsonant == 5)) || ((TPLfinal == "NG") && (CLconsonant == 5))) { TPLplainfinal = TPLfinal; TCLconsonant = "n"; }
+                        if (((TPLfinal == "M") && (CLconsonant == 5)) || ((TPLfinal == "NG") && (CLconsonant == 5))) {
+                            TPLplainfinal = TPLfinal;
+                            if (konglishCL == 1) {
+                                TCLconsonant = "r";
+                            } else {
+                                if (!currentLyric.StartsWith("ㄹ")) {
+                                    TCLconsonant = "n";
+                                }
+                            }
+                        }
 
                         // Hanja batchim ㄱ(g)ㄷ(d)ㅂ(b) + ㄹ(l) = ㅇ(ng)ㄴ(n)ㅁ(m) + ㄴ(n)(1)
-                        if (((TPLfinal == "K") && (CLconsonant == 5)) || ((TPLfinal == "T") && (CLconsonant == 5)) || ((TPLfinal == "P") && (CLconsonant == 5))) { TCLconsonant = "n"; }
+                        if (((TPLfinal == "K") && (CLconsonant == 5)) || ((TPLfinal == "T") && (CLconsonant == 5)) || ((TPLfinal == "P") && (CLconsonant == 5))) {
+                            if (konglishCL == 1) {
+                                TCLconsonant = "r";
+                            } else {
+                                TCLconsonant = "n";
+                            }
+                        }
+
                     }
                     if (nextExist && nextHangeul && (TCLfinal != "")) {
                         //Batchim ㄱ(g)ㄷ(d)ㅂ(b) + ㄴ(n)ㅁ(m) = ㅇ(ng)ㄴ(n)ㅁ(m)
-                        if (((TCLfinal == "K") && (TNLconsonant == "n")) || ((TCLfinal == "K") && (TNLconsonant == "m"))) { TCLfinal = "NG"; TCLplainfinal = "NG"; } else if (((TCLfinal == "T") && (TNLconsonant == "n")) || ((TCLfinal == "T") && (TNLconsonant == "m"))) { TCLfinal = "N"; TCLplainfinal = "N"; } else if (((TCLfinal == "P") && (TNLconsonant == "n")) || ((TCLfinal == "P") && (TNLconsonant == "m"))) { TCLfinal = "M"; TCLplainfinal = "M"; }
 
-                        if ((TCLfinal == "K") && (TNLconsonant == "s") || (TCLfinal == "P") && (TNLconsonant == "s") || (TCLfinal == "L") && (TNLconsonant == "s")) { TNLconsonant = "ss"; }
+                        if ((TCLfinal == "K") && (TNLconsonant == "s") || (TCLfinal == "P") && (TNLconsonant == "s") || (TCLfinal == "L") && (TNLconsonant == "s")) {
+                            if (konglishNL == 1) {
+                                TNLconsonant = "th";
+                            } else {
+                                TNLconsonant = "ss";
+                            }
+                            
+                        }
 
-                        if ((TCLfinal == "K") && (TNLconsonant == "r") || (TCLfinal == "P") && (TNLconsonant == "r") || (TCLfinal == "T") && (TNLconsonant == "r")) { TNLconsonant = "n"; }
+                        if ((TCLfinal == "K") && (TNLconsonant == "r") || (TCLfinal == "P") && (TNLconsonant == "r") || (TCLfinal == "T") && (TNLconsonant == "r")) {
+                            if (konglishNL == 1) {
+                                TNLconsonant = "rr";
+                            } else {
+                                TNLconsonant = "n";
+                            }
+                        }
 
-                        if ((TCLfinal == "L") && (TNLconsonant == "n") || (TCLfinal == "L") && (TNLconsonant == "r")) { TNLconsonant = "l"; }
+                        if (((TCLfinal == "K") && (TNLconsonant == "n")) || ((TCLfinal == "K") && (TNLconsonant == "m"))) {
+                            TCLfinal = "NG";
+                            TCLplainfinal = "NG";
+                        } else if (((TCLfinal == "T") && (TNLconsonant == "n")) || ((TCLfinal == "T") && (TNLconsonant == "m"))) {
+                            TCLfinal = "N";
+                            TCLplainfinal = "N";
+                        } else if (((TCLfinal == "P") && (TNLconsonant == "n")) || (TCLfinal == "P") && (TNLconsonant == "m")) {
+                            TCLfinal = "M";
+                            TCLplainfinal = "M";
+                        }
 
-                        if ((TCLfinal == "M") && (TNLconsonant == "r")) { TNLconsonant = "n"; }
+                        if (((TCLfinal == "L") && (TNLconsonant == "n") || (TCLfinal == "L") && (TNLconsonant == "r") || (TCLfinal == "N" || TCLfinal == "M" || TCLfinal == "NG") && nextNeighbour.Value.lyric.StartsWith("ㄹ")) && konglishNL == 0) { TNLconsonant = "l"; }
 
-                        if ((TCLfinal == "T") && (TNLconsonant == "s" || TNLconsonant == "ss")) { TCLfinal = ""; TNLconsonant = "ss"; }
+                        if ((TCLfinal == "M") && (TNLconsonant == "r") && konglishNL == 0) { TNLconsonant = "n"; }
 
-                        if ((TCLfinal == "NG") && (TNLconsonant == "r")) { TNLconsonant = "n"; }
+                        if ((TCLfinal == "T") && (TNLconsonant == "s" || TNLconsonant == "ss") && konglishNL == 0) { TCLfinal = ""; TNLconsonant = "ss"; }
+
+                        if ((TCLfinal != "") && TNLconsonant == "p" && konglishNL == 1) {
+                            TNLconsonant = "f";
+                        } else if ((TCLfinal != "") && TNLconsonant == "b" && konglishNL == 1) {
+                            TNLconsonant = "v";
+                        } else if ((TCLfinal != "") && TNLconsonant == "j" && konglishNL == 1) {
+                            TNLconsonant = "z";
+                        } else if ((TCLfinal != "") && TNLconsonant == "s" && konglishNL == 1) {
+                            TNLconsonant = "th";
+                        } else if ((TCLfinal != "") && TNLconsonant == "r" && konglishNL == 1) {
+                            TNLconsonant = "rr";
+                        }
+
+                        if ((TCLfinal == "NG") && (TNLconsonant == "r")) {
+                            if (konglishNL == 1) {
+                                TNLconsonant = "rr";
+                            } else {
+                                TNLconsonant = "n";
+                            }
+                        }
 
                         if ((TCLfinal == "L") && (TNLconsonant == "d")) { TNLconsonant = "dd"; }
 
-                        if ((TCLfinal == "L") && (TNLconsonant == "j")) { TNLconsonant = "jj"; }
+                        if ((TCLfinal == "L") && (TNLconsonant == "j") && konglishNL == 0) { TNLconsonant = "jj"; }
 
                         // Hanja batchim base ㄱ(g)ㄷ(d)ㅂ(b) + ㄹ(l) = ㅇ(ng)ㄴ(n)ㅁ(m) + ㄴ(n)(2)
-                        if ((TCLfinal == "K") && (NLconsonant == 5)) { TCLfinal = "NG"; TCLplainfinal = "NG"; } else if ((TCLfinal == "T") && (NLconsonant == 5)) { TCLfinal = "N"; TCLplainfinal = "N"; } else if ((TCLfinal == "P") && (NLconsonant == 5)) { TCLfinal = "M"; TCLplainfinal = "M"; }
+                        if ((TCLfinal == "K") && (NLconsonant == 5) && konglishNL == 0) {
+                            TCLfinal = "NG";
+                            TCLplainfinal = "NG";
+                        } else if ((TCLfinal == "T") && (NLconsonant == 5) && konglishNL == 0) {
+                            TCLfinal = "N";
+                            TCLplainfinal = "N";
+                        } else if ((TCLfinal == "P") && (NLconsonant == 5) && konglishNL == 0) {
+                            TCLfinal = "M";
+                            TCLplainfinal = "M";
+                        }
                     }
 
 
                     // 7. voicing
                     if (prevExist && prevHangeul && (TPLfinal != "")) {
-                        if (((PLfinal == 8) && (TCLconsonant == "n")) || ((PLfinal == 13) && (TCLconsonant == "n")) || ((PLfinal == 15) && (TCLconsonant == "n"))) { TPLplainfinal = "L"; TCLconsonant = "l"; }
+                        if (((PLfinal == 8) && (TCLconsonant == "n")) || ((PLfinal == 13) && (TCLconsonant == "n")) || ((PLfinal == 15) && (TCLconsonant == "n")) && konglishCL == 0) { TPLplainfinal = "L"; TCLconsonant = "l"; }
                     }
                     if (nextExist && nextHangeul && (TCLfinal != "")) {
-                        if (((PLfinal == 8) && (TNLconsonant == "r") || ((PLfinal == 13) && (TCLconsonant == "r")) || ((PLfinal == 15) && (TCLconsonant == "r")))) { TCLconsonant = "l"; }
+                        if (((PLfinal == 8) && (TNLconsonant == "r") || ((PLfinal == 13) && (TCLconsonant == "r")) || ((PLfinal == 15) && (TCLconsonant == "r"))) && konglishCL == 0) { TCLconsonant = "l"; }
                     }
                     if (nextExist && nextHangeul && (TCLfinal != "")) {
-                        if ((TCLfinal == "N") && (TNLconsonant == "r")) { TCLfinal = "L"; TCLplainfinal = "L"; TNLconsonant = TNLconsonant.Replace("r", "l"); }
+                        if ((TCLfinal == "N") && (TNLconsonant == "r") && konglishCL == 0) { TCLfinal = "L"; TCLplainfinal = "L"; TNLconsonant = TNLconsonant.Replace("r", "l"); }
                     }
 
 
                     // 8. Batchim + ㄹ(r) = ㄹㄹ(l)
-                    if (prevExist && prevHangeul && (TPLfinal != "")) { lCL = 1; }
+                    if (prevExist && prevHangeul && (TPLfinal != "") && konglishCL == 0) { lCL = 1; }
+
+                    if (currentHangeul && (TCLfinal != "")) { lNL = 1; }
 
 
 
@@ -585,13 +669,20 @@ namespace OpenUtau.Plugin.Builtin {
                 //for Vowel VCV
                 if (prevExist && prevHangeul && TPLfinal == "" && TCLconsonantCVVC == "" && TCLconsonant == "" && !comesSemivowelWithoutVC) {
                     CV = TPLplainvowel + " " + TCLvowel;
-
                 }
 
                 string FC = "";
                 if (TCLfinal != "") { FC = TCLplainvowel + " " + TCLfinal; }
 
                 if (lCL == 1) { CV = CV.Replace("r", "l"); }
+
+                if (konglishCL == 1) {
+                    CV = CV.Replace("p", "f");
+                    CV = CV.Replace("b", "v");
+                    CV = CV.Replace("j", "z");
+                    CV = CV.Replace("s", "th");
+                    CV = CV.Replace("r", "rr");
+                }
 
                 // Batchim connector note
                 string CC = "";
@@ -691,6 +782,8 @@ namespace OpenUtau.Plugin.Builtin {
                         consonant = "chy";
                     } else if (nextLyric.StartsWith("chw") || (nextLyric.Contains("cho")) || (nextLyric.Contains("chu"))) {
                         consonant = "chw";
+                    } else if (nextLyric.StartsWith("ch")) {
+                        consonant = "ch";
                     } else if (nextExist && nextHangeul && TNLconsonant != "") {
                         consonant = TNLconsonant;
                     }
@@ -716,6 +809,19 @@ namespace OpenUtau.Plugin.Builtin {
                                         CC = $"{TCLplainfinal} {TNLconsonant = "l" + "w"}";
                                     } else {
                                         CC = $"{TCLplainfinal} {TNLconsonant = "l"}";
+                                    }
+                                } else if ((nextNeighbour?.lyric)[0] == '1') {
+                                    TNLsemivowel = 0;
+                                    if (TNLconsonant == "p") {
+                                        CC = $"{TCLplainfinal} {TNLconsonant = "f"}";
+                                    } else if (TNLconsonant == "b") {
+                                        CC = $"{TCLplainfinal} {TNLconsonant = "v"}";
+                                    } else if (TNLconsonant == "j") {
+                                        CC = $"{TCLplainfinal} {TNLconsonant = "z"}";
+                                    } else if (TNLconsonant == "s") {
+                                        CC = $"{TCLplainfinal} {TNLconsonant = "th"}";
+                                    } else if (TNLconsonant == "r") {
+                                        CC = $"{TCLplainfinal} {TNLconsonant = "rr"}";
                                     }
                                 }
                             }
@@ -790,8 +896,8 @@ namespace OpenUtau.Plugin.Builtin {
                             }
 
                             // Minimum is 5 tick, maximum is half of note
-                            fcLength = Convert.ToInt32(Math.Min(totalDuration / 1.5, Math.Max(5, fcLength + (ccLength * (nextAttr.consonantStretchRatio ?? 1)))));
                             ccLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(5, ccLength * (nextAttr.consonantStretchRatio ?? 1))));
+                            fcLength = Convert.ToInt32(Math.Min(totalDuration / 1.5, Math.Max(5, fcLength + (ccLength * (nextAttr.consonantStretchRatio ?? 1)))));
 
                             if (singer.TryGetMappedOto(CV, note.tone + attr0.toneShift, attr0.voiceColor, out var oto1) && singer.TryGetMappedOto(FC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto2) && singer.TryGetMappedOto(CC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto3)) {
                                 CV = oto1.Alias;
@@ -851,6 +957,19 @@ namespace OpenUtau.Plugin.Builtin {
                             } else {
                                 VC = $"{TCLplainvowel} {TNLconsonant = "l"}";
                             }
+                        } else if ((nextNeighbour?.lyric)[0] == '1') {
+                            TNLsemivowel = 0;
+                            if (TNLconsonant == "p") {
+                                VC = $"{TCLplainvowel} {TNLconsonant = "f"}";
+                            } else if (TNLconsonant == "b") {
+                                VC = $"{TCLplainvowel} {TNLconsonant = "v"}";
+                            } else if (TNLconsonant == "j") {
+                                VC = $"{TCLplainvowel} {TNLconsonant = "z"}";
+                            } else if (TNLconsonant == "s") {
+                                VC = $"{TCLplainvowel} {TNLconsonant = "th"}";
+                            } else if (TNLconsonant == "r") {
+                                VC = $"{TCLplainvowel} {TNLconsonant = "rr"}";
+                            }
                         }
                     }
                     if ((VC != "") && nextHangeul && (TNLconsonant != "" || TNLconsonantCVVC != "" || (TNLconsonant == "" || TNLconsonantCVVC != "") && (TNLsemivowel == 1 || TNLsemivowel == 2)) && singer.TryGetMappedOto(VC, nextNeighbour.Value.tone + attr0.toneShift, attr0.voiceColor, out var otoVC)) {
@@ -869,7 +988,7 @@ namespace OpenUtau.Plugin.Builtin {
 
                         var nextAttr = nextNeighbour.Value.phonemeAttributes?.FirstOrDefault(attr => attr.index == 0) ?? default;
                         // Minimam is 30 tick, maximum is half of note
-                        vcLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(5, vcLength * (nextAttr.consonantStretchRatio ?? 1))));
+                        vcLength = Convert.ToInt32(Math.Min(totalDuration / 1.5, Math.Max(5, vcLength * (nextAttr.consonantStretchRatio ?? 1))));
 
                         if (singer.TryGetMappedOto(CV, note.tone + attr0.toneShift, attr0.voiceColor, out var oto1) && singer.TryGetMappedOto(VC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto2)) {
                             CV = oto1.Alias;
@@ -901,7 +1020,7 @@ namespace OpenUtau.Plugin.Builtin {
 
                         var nextAttr = nextNeighbour.Value.phonemeAttributes?.FirstOrDefault(attr => attr.index == 0) ?? default;
                         // Minimum is 5 tick, maximum is half of note
-                        vcLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(5, vcLength * (nextAttr.consonantStretchRatio ?? 1))));
+                        vcLength = Convert.ToInt32(Math.Min(totalDuration / 1.5, Math.Max(5, vcLength * (nextAttr.consonantStretchRatio ?? 1))));
 
                         if (singer.TryGetMappedOto(CV, note.tone + attr0.toneShift, attr0.voiceColor, out var oto1) && singer.TryGetMappedOto(VC, note.tone + attr0.toneShift, attr0.voiceColor, out var oto2)) {
                             CV = oto1.Alias;
@@ -1048,8 +1167,6 @@ namespace OpenUtau.Plugin.Builtin {
                     consonant = getConsonant(nextNeighbour?.lyric); //Romaja only
                     if ((!isAlphaCon(consonant) || con == "f" || con == "v" || con == "z" || con == "th" || con == "rr")) {
                         consonant = con;
-                    } else if (nextLyric.StartsWith("chw") || (nextLyric.Contains("cho")) || (nextLyric.Contains("chu"))) {
-                        consonant = "chw";
                     } else if (nextLyric.StartsWith("ggy") || (nextLyric.Contains("ggi"))) {
                         consonant = "ggy";
                     } else if (nextLyric.StartsWith("ggw") || (nextLyric.Contains("ggo")) || (nextLyric.Contains("ggu"))) {
@@ -1079,10 +1196,30 @@ namespace OpenUtau.Plugin.Builtin {
                     consonant = "chy";
                 } else if (nextLyric.StartsWith("chw") || (nextLyric.Contains("cho")) || (nextLyric.Contains("chu"))) {
                     consonant = "chw";
+                } else if (nextLyric.StartsWith("ch")) {
+                    consonant = "ch";
                 } else if (nextLyric.StartsWith("y")) {
                     consonant = "y";
                 } else if (nextLyric.StartsWith("w")) {
                     consonant = "w";
+                } else if (nextExist && nextHangeul && nextLyric.StartsWith("ㄹ")) { 
+                    TNLconsonant = "l";
+                    consonant = TNLconsonant;
+                } else if (nextExist && nextHangeul && nextLyric.StartsWith("1") && TNLconsonant == "p") {
+                    TNLconsonant = "f";
+                    consonant = TNLconsonant;
+                } else if (nextExist && nextHangeul && nextLyric.StartsWith("1") && TNLconsonant == "b") {
+                    TNLconsonant = "v";
+                    consonant = TNLconsonant;
+                } else if (nextExist && nextHangeul && nextLyric.StartsWith("1") && TNLconsonant == "j") {
+                    TNLconsonant = "z";
+                    consonant = TNLconsonant;
+                } else if (nextExist && nextHangeul && nextLyric.StartsWith("1") && TNLconsonant == "s") {
+                    TNLconsonant = "th";
+                    consonant = TNLconsonant;
+                } else if (nextExist && nextHangeul && nextLyric.StartsWith("1") && TNLconsonant == "r") {
+                    TNLconsonant = "rr";
+                    consonant = TNLconsonant;
                 } else if (nextExist && nextHangeul && TNLconsonant != "" && TNLsemivowel == 0) {
                     consonant = TNLconsonant;
                 } else if (nextExist && nextHangeul && TNLconsonant == "" && TNLsemivowel == 1) {
@@ -1093,8 +1230,6 @@ namespace OpenUtau.Plugin.Builtin {
                     consonant = TNLconsonant + "y";
                 } else if (nextExist && nextHangeul && TNLconsonant != "" && TNLsemivowel == 2) {
                     consonant = TNLconsonant + "w";
-                } else if (nextExist && nextHangeul && nextLyric.StartsWith("ㄹ") && TNLconsonant == "r") {
-                    consonant = "l";
                 } else if (nextExist && nextHangeul && TNLconsonant == "") {
                     consonant = "";
                 }
@@ -1154,7 +1289,7 @@ namespace OpenUtau.Plugin.Builtin {
                     }
                 }
                 // Minimum is 5 tick, maximum is half of note
-                vcLength = Convert.ToInt32(Math.Min(totalDuration / 2, Math.Max(5, vcLength * (nextAttr.consonantStretchRatio ?? 1))));
+                vcLength = Convert.ToInt32(Math.Min(totalDuration / 1.5, Math.Max(5, vcLength * (nextAttr.consonantStretchRatio ?? 1))));
 
                 return new Result {
                     phonemes = new Phoneme[] {
