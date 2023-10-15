@@ -127,6 +127,7 @@ namespace OpenUtau.Plugin.Builtin {
             };
 
 
+
         static readonly Dictionary<string, string> vowelLookup;
         static readonly Dictionary<string, string> consonantLookup;
 
@@ -630,20 +631,10 @@ namespace OpenUtau.Plugin.Builtin {
                     var prevLyric = string.Join("", prevUnicode);
 
                     // Current note is VV
-                    if (vowelLookup.TryGetValue(prevUnicode.LastOrDefault().ToString() ?? string.Empty, out var vow)) {
+                    if (vowelLookup.TryGetValue(prevLyric.ToString() ?? string.Empty, out var vow)) {
                         vowel = vow;
 
                         var mixVV = $"{vow} {CV}";
-
-                        if (prevLyric.EndsWith("eo")) {
-                            mixVV = $"eo {CV}";
-                        } else if (prevLyric.EndsWith("eu")) {
-                            mixVV = $"eu {CV}";
-                        } else if (prevLyric.EndsWith("NG")) {
-                            mixVV = $"NG {CV}";
-                        } else if (prevLyric.EndsWith("er")) {
-                            mixVV = $"er {CV}";
-                        }
 
                         // try vowlyric then currentlyric
                         string[] tests = new string[] { mixVV, CV };
@@ -651,7 +642,6 @@ namespace OpenUtau.Plugin.Builtin {
                             CV = oto.Alias;
                         }
                     }
-
                 }
 
                 if (nextNeighbour != null) { // 다음에 노트가 있으면
@@ -664,7 +654,7 @@ namespace OpenUtau.Plugin.Builtin {
 
                     // Get consonant from next note
                     var consonant = "";
-                    if (consonantLookup.TryGetValue(nextUnicode.FirstOrDefault().ToString() ?? string.Empty, out var con) || (nextLyric.Length >= 3 && consonantLookup.TryGetValue(nextLyric.Substring(0, 3), out con))) {
+                    if (consonantLookup.TryGetValue(nextUnicode.FirstOrDefault().ToString() ?? string.Empty, out var con)) {
                         consonant = getConsonant(nextNeighbour?.lyric); //Mixed romaja
                         if ((!isAlphaCon(consonant) || con == "f" || con == "v" || con == "z" || con == "th" || con == "rr")) {
                             consonant = con;
@@ -983,20 +973,10 @@ namespace OpenUtau.Plugin.Builtin {
 
                 var prevLyric = string.Join("", prevUnicode);
                 // Current note is VV
-                if (vowelLookup.TryGetValue(prevUnicode.LastOrDefault().ToString() ?? string.Empty, out var vow)) {
+                if (vowelLookup.TryGetValue(prevLyric.ToString() ?? string.Empty, out var vow)) {
                     vowel = vow;
 
                     var vowLyric = $"{vow} {currentLyric}";
-
-                    if (prevLyric.EndsWith("eo")) {
-                        vowLyric = $"eo {currentLyric}";
-                    } else if (prevLyric.EndsWith("eu")) {
-                        vowLyric = $"eu {currentLyric}";
-                    } else if (prevLyric.EndsWith("NG")) {
-                        vowLyric = $"NG {currentLyric}";
-                    } else if (prevLyric.EndsWith("er")) {
-                        vowLyric = $"er {currentLyric}";
-                    }
 
                     // try vowlyric then currentlyric
                     string[] tests = new string[] { vowLyric, currentLyric };
@@ -1064,7 +1044,7 @@ namespace OpenUtau.Plugin.Builtin {
 
                 // Get consonant from next note
                 var consonant = "";
-                if (consonantLookup.TryGetValue(nextUnicode.FirstOrDefault().ToString() ?? string.Empty, out var con) || (nextLyric.Length >= 3 && consonantLookup.TryGetValue(nextLyric.Substring(0, 3), out con))) {
+                if (consonantLookup.TryGetValue(nextUnicode.FirstOrDefault().ToString() ?? string.Empty, out var con)) {
                     consonant = getConsonant(nextNeighbour?.lyric); //Romaja only
                     if ((!isAlphaCon(consonant) || con == "f" || con == "v" || con == "z" || con == "th" || con == "rr")) {
                         consonant = con;
@@ -1118,7 +1098,6 @@ namespace OpenUtau.Plugin.Builtin {
                 } else if (nextExist && nextHangeul && TNLconsonant == "") {
                     consonant = "";
                 }
-
 
                 if (consonant == "") {
                     return new Result {
