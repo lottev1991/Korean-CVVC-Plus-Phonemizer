@@ -500,6 +500,8 @@ namespace OpenUtau.Plugin.Builtin {
 
                         if ((TCLfinal == "L") && (TNLconsonant == "d")) { TNLconsonant = "dd"; }
 
+                        if ((TCLfinal == "L") && (TNLconsonant == "j")) { TNLconsonant = "jj"; }
+
                         // Hanja batchim base ㄱ(g)ㄷ(d)ㅂ(b) + ㄹ(l) = ㅇ(ng)ㄴ(n)ㅁ(m) + ㄴ(n)(2)
                         if ((TCLfinal == "K") && (NLconsonant == 5)) { TCLfinal = "NG"; TCLplainfinal = "NG"; } else if ((TCLfinal == "T") && (NLconsonant == 5)) { TCLfinal = "N"; TCLplainfinal = "N"; } else if ((TCLfinal == "P") && (NLconsonant == 5)) { TCLfinal = "M"; TCLplainfinal = "M"; }
                     }
