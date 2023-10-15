@@ -44,6 +44,12 @@ Syllables are built like this:
   - "th";
   - "rr" (English "r" starting sound);
   - "er" (English "r" rhotic vowel).
+  You can use the Konglish initials on Hangul syllables by prefixing them with a ``1``:
+	- ``p`` transforms into ``f``;
+	- ``b`` transforms into ``v``;
+	- ``j`` transforms into ``z``;
+	- ``s`` transforms into ``th``;
+	- ``r`` transforms into ``rr``.
 - As you can see above, the phonemizer only needs basic CV and batchim notes, the rest is optional. So in theory, you could create a "CV + batchim" bank (with capital letters!) and it would be fully functional with this phonemizer.
 ### !! Non-Korean users on Windows: PLEASE READ !!
 While this phonemizer does support rudimentary romaja input (i.e. no automatic batchim is applied), it is highly recommended to use Hangul unless you're doing Konglish. For Mac users, this is not a problem since a romaja-based QWERTY Korean keyboard comes with OSx by default. However, for Windows, by default, there is not. This is very impractical for users who either can't read Hangul and/or who do not own keyboard stickers.
