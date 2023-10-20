@@ -524,7 +524,6 @@ namespace OpenUtau.Plugin.Builtin {
                             } else {
                                 TNLconsonant = "ss";
                             }
-                            
                         }
 
                         if ((TCLfinal == "K") && (TNLconsonant == "r") || (TCLfinal == "P") && (TNLconsonant == "r") || (TCLfinal == "T") && (TNLconsonant == "r")) {
@@ -1059,6 +1058,9 @@ namespace OpenUtau.Plugin.Builtin {
                 if (prevExist && TPLfinal == "" && vowEnd.Contains(currentLyric)) {
                     endBreath = $"{TPLplainvowel} {vowEnd}";
                     prevIsBreath = true; // to prevent this→→ case→→, for example... "[사, -, 사 (=notes)]" should be "[- sa,  a -, - sa(=phonemes)]", but it becomes [sa, a -, 사(=phonemes)] in phonemizer, so '사' note becomes *no sound.
+                } else if (prevExist && TPLfinal != "" && vowEnd.Contains(currentLyric)) {
+                    endBreath = $"{TPLplainfinal} {vowEnd}";
+                    prevIsBreath = true; // to prevent this→→ case→→, for example... "[사, -, 사 (=notes)]" should be "[- sa,  a -, - sa(=phonemes)]", but it becomes [sa, a -, 사(=phonemes)] in phonemizer, so '사' note becomes *no sound.
                 }
 
                 if (singer.TryGetMappedOto(endBreath, note.tone + attr0.toneShift, attr0.voiceColor, out var oto)) {
@@ -1202,7 +1204,7 @@ namespace OpenUtau.Plugin.Builtin {
                     consonant = "y";
                 } else if (nextLyric.StartsWith("w")) {
                     consonant = "w";
-                } else if (nextExist && nextHangeul && nextLyric.StartsWith("ㄹ")) { 
+                } else if (nextExist && nextHangeul && nextLyric.StartsWith("ㄹ")) {
                     TNLconsonant = "l";
                     consonant = TNLconsonant;
                 } else if (nextExist && nextHangeul && nextLyric.StartsWith("1") && TNLconsonant == "p") {
