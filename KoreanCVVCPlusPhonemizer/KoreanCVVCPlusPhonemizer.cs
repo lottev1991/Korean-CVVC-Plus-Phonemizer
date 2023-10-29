@@ -1205,7 +1205,13 @@ namespace OpenUtau.Plugin.Builtin {
                 } else if (nextLyric.StartsWith("w")) {
                     consonant = "w";
                 } else if (nextExist && nextHangeul && nextLyric.StartsWith("ㄹ")) {
-                    TNLconsonant = "l";
+                    if (TNLvowel.StartsWith("y") || TNLvowel == "i") {
+                        TNLconsonant = "l" + "y";
+                    } else if (TNLvowel.StartsWith("w") || TNLvowel == "o" || TNLvowel == "u") {
+                        TNLconsonant = "l" + "w";
+                    } else {
+                        TNLconsonant = "l";
+                    }
                     consonant = TNLconsonant;
                 } else if (nextExist && nextHangeul && nextLyric.StartsWith("1") && TNLconsonant == "p") {
                     TNLconsonant = "f";
